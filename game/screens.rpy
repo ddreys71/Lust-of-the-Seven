@@ -1634,3 +1634,19 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 900
+##
+
+
+screen hud():
+    vbox xalign 0.98 yalign 0.02 spacing 8:
+        text "Monnaie : [money_gold]g [money_silver]s [money_bronze]b" size 24
+        text "Affection Luxuria : [lux_affection]/1000" size 24
+
+screen world_map():
+    modal True
+    add "#111"  # fond noir temporaire
+    vbox xalign 0.5 yalign 0.4 spacing 40:
+        text "Luxuria City" size 50 xalign 0.5
+        textbutton "Forêt interdite → Combat" action Jump("combat_test") style "large_button"
+        textbutton "Guilde des Pécheresses" action Jump("guild") style "large_button"
+        textbutton "Quitter la map" action Return()
