@@ -1650,3 +1650,112 @@ screen world_map():
         textbutton "Forêt interdite → Combat" action Jump("combat_test") style "large_button"
         textbutton "Guilde des Pécheresses" action Jump("guild") style "large_button"
         textbutton "Quitter la map" action Return()
+
+        screen inventory():
+    modal True
+    frame:
+        xalign 0.5 yalign 0.5
+        vbox:
+            text "Inventaire" xalign 0.5 size 40
+            # Grid simple 3x3 (extensible)
+            hbox:
+                for i in range(3):
+                    vbox:
+                        for j in range(3):
+                            $ idx = i*3 + j
+                            if idx < len(inventory):
+                                $ item_name = inventory[idx]
+                                textbutton item_name action [SetVariable("selected_item", item_name), NullAction()] tooltip items[item_name].get('description', 'Équipe-le!')
+                            else:
+                                null
+            textbutton "Équipement" action Show("equipment") xalign 0.5
+            textbutton "Retour" action Hide("inventory") xalign 0.5
+
+screen equipment():
+    modal True
+    frame:
+        xalign 0.5 yalign 0.5
+        vbox:
+            text "Équipement MC" xalign 0.5 size 40
+            # Poupée papier placeholder (remplace par layeredimage avec tes sprites)
+            add "#ccc" size (200, 400) xalign 0.3  # Corps placeholder
+            text "Head: [equipment['head'] or 'Vide']" 
+            text "Body: [equipment['body'] or 'Vide']" 
+            text "Weapon1: [equipment['weapon1'] or 'Vide']"
+            text "Weapon2: [equipment['weapon2'] or 'Vide']"
+            text "Relic1: [equipment['relic1'] or 'Vide']"
+            text "Relic2: [equipment['relic2'] or 'Vide']"
+            text "Amulet: [equipment['amulet'] or 'Vide']"
+            # Stats live
+            text "STR: [player_str]  MAG: [player_mag]  VIT: [player_vit]" xalign 0.5
+            hbox:
+                textbutton "Équiper Sélectionné" action If(selected_item, [Function(equip_item, selected_item), Function(calculate_stats), Return()])
+                textbutton "Retour Inventaire" action Show("inventory")
+    # Fonction equip (en python)
+    def equip_item(item_name):
+        item_type = items[item_name]['type']
+        slot_map = {'weapon1': 'weapon1', 'body': 'body', 'amulet': 'amulet'}  # Mappe types à slots
+        if item_type in slot_map:
+            equipment[slot_map[item_type]] = item_name
+            # Remove from inventory
+            if item_name in inventory: inventory.remove(item_name)
+        else:
+            "Item non équipable ici."
+
+# Ajoute bouton dans HUD (modifie screen hud() en ajoutant ça dans le vbox)
+textbutton "Inventaire" action Show("inventory") xoffset -80
+
+
+screen inventory():
+    modal True
+    frame:
+        xalign 0.5 yalign 0.5
+        vbox:
+            text "Inventaire" xalign 0.5 size 40
+            # Grid simple 3x3 (extensible)
+            hbox:
+                for i in range(3):
+                    vbox:
+                        for j in range(3):
+                            $ idx = i*3 + j
+                            if idx < len(inventory):
+                                $ item_name = inventory[idx]
+                                textbutton item_name action [SetVariable("selected_item", item_name), NullAction()] tooltip items[item_name].get('description', 'Équipe-le!')
+                            else:
+                                null
+            textbutton "Équipement" action Show("equipment") xalign 0.5
+            textbutton "Retour" action Hide("inventory") xalign 0.5
+
+screen equipment():
+    modal True
+    frame:
+        xalign 0.5 yalign 0.5
+        vbox:
+            text "Équipement MC" xalign 0.5 size 40
+            # Poupée papier placeholder (remplace par layeredimage avec tes sprites)
+            add "#ccc" size (200, 400) xalign 0.3  # Corps placeholder
+            text "Head: [equipment['head'] or 'Vide']" 
+            text "Body: [equipment['body'] or 'Vide']" 
+            text "Weapon1: [equipment['weapon1'] or 'Vide']"
+            text "Weapon2: [equipment['weapon2'] or 'Vide']"
+            text "Relic1: [equipment['relic1'] or 'Vide']"
+            text "Relic2: [equipment['relic2'] or 'Vide']"
+            text "Amulet: [equipment['amulet'] or 'Vide']"
+            # Stats live
+            text "STR: [player_str]  MAG: [player_mag]  VIT: [player_vit]" xalign 0.5
+            hbox:
+                textbutton "Équiper Sélectionné" action If(selected_item, [Function(equip_item, selected_item), Function(calculate_stats), Return()])
+                textbutton "Retour Inventaire" action Show("inventory")
+    # Fonction equip (en python)
+    def equip_item(item_name):
+        item_type = items[item_name]['type']
+        slot_map = {'weapon1': 'weapon1', 'body': 'body', 'amulet': 'amulet'}  # Mappe types à slots
+        if item_type in slot_map:
+            equipment[slot_map[item_type]] = item_name
+            # Remove from inventory
+            if item_name in inventory: inventory.remove(item_name)
+        else:
+            "Item non équipable ici."
+
+# Ajoute bouton dans HUD (modifie screen hud() en ajoutant ça dans le vbox)
+textbutton "Inventaire" action Show("inventory") xoffset -80

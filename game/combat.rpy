@@ -4,17 +4,20 @@ label combat_test:
     scene black
     "Une Slime Girl lubrique t'attaque !"
 
-    label combat_loop:
-        menu:
-            "Attaque physique":
-                $ dmg = renpy.random.randint(20, 30)
-                $ enemy_hp -= dmg
-                "Tu infliges [dmg] dégâts ! Slime Girl : [enemy_hp]/[enemy_maxhp] HP"
-            "Magie de feu (-10 MP)":
-                $ dmg = renpy.random.randint(35, 45)
-                $ enemy_hp -= dmg
-                "Boule de feu ! [dmg] dégâts enflammés !"
-            "Fuir":
+label combat_loop:
+    $ calculate_stats()  # Update stats avant tour
+    menu:
+        "Attaque physique ([player_str] STR)":
+            $ dmg = renpy.random.randint(player_str, player_str * 2)
+            $ enemy_hp -= dmg
+            show expression Text(f"{dmg} dégâts !", size=30) at center with dissolve
+            "Tu infliges [dmg] dégâts ! Slime Girl : [enemy_hp]/[enemy_maxhp] HP"
+        # ... (garde Magie et Fuir comme avant, mais Magie utilise player_mag pour dmg)
+        "Magie de feu (-10 MP, [player_mag] MAG)":
+            $ dmg = renpy.random.randint(player_mag * 2, player_mag * 3)
+            $ enemy_hp -= dmg
+            "Boule de feu ! [dmg] dégâts enflammés !"
+        "Fuir":
                 "Tu t’enfuis en courant."
                 jump after_combat
 
